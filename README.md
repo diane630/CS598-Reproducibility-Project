@@ -27,6 +27,10 @@ Three claims to be addressed from the original paper:
 
 Install python(3.6+), TensorFlow(2.x).
 
+## Data download instruction 
+
+The Chronic Diseases Prevalence Dataset is open according to [here](https://digital.nhs.uk/data-and-information/publications/statistical/quality-and-outcomes-framework-achievement-prevalence-and-exceptions-data)
+
 ## Run
 
 All the code related to this reproducibility project is available in the CPH-Reproducibility-Project directory.
@@ -57,6 +61,27 @@ All the code related to this reproducibility project is available in the CPH-Rep
 
     - Plot Pearson correlation of any two pairs of diseases.
 
+# Reproducibility Results
+ 
+1.  Claim 1
+
+I reproduced comparable inference quality metrics as the original paper: RMSE for obesity, hypertension and diabetes were 0.0409, 0.0151, 0.0218 (+13.6%, -9.0%, +20.4% compared with original paper); MAE for obesity, hypertension and diabetes were 0.0329, 0.0106, 0.0161 (+17.1%, -17.8%, +28.8% compared with original paper).
+
+![claim1](https://i.ibb.co/kH1tpDh/20220509113127.png)
+
+Table1 has summarized the final results for three diseases using the optimized configurations. Compared with two top-performing baseline models, CPH1 (CPH model without hinting mechanism) and GAIN (GAN model using intra-disease data only), the average accuracy improvement across three diseases is 9.8% and 51.4%. The percentage improvement from CPH1 model is very close to the value in original paper (10.5%). Percentage improvement from GAIN is slightly higher than original paper (51.4% vs 31.1%), which is also acceptable because I honestly did not spend as much time tuning baseline models thus GAIN model performs slightly worse than what presented in the original paper. Regardless of the small difference, this result supports the overall reproducibility of the CPH model proposed in the original work. It also upholds the paper’s conclusion that CPH model can achieve significant improvements in recovering public health dataset with missing entries by leveraging the power of both intra- and inter-disease correlation.
+
+2.  Claim 2
+
+![claim2](https://i.ibb.co/t4bYf48/20220509113125.png)
+
+The spatial correlation within a certain geographical scale can be easily seen from the Figure 2. This finding justifies the rationale of using intra-disease data from nearby wards to predict a specific location.
+
+3.  Claim 3
+
+![claim3](https://i.ibb.co/cvWsf6b/20220509113118.png)
+
+The high Pearson coefficients (0.75 ~ 0.84) between any of the three disease pair do support the Claim 3. So, positive correlation exists among these three chronic diseases, and using inter-disease prevalence data is reasonable for missing data recovery.
 
 # Demo video
 
