@@ -19,7 +19,7 @@ from utils import binary_sampler, uniform_sampler, sample_batch_index
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
-def cph (data_x, cph_parameters,data_image):
+def cph (data_x, cph_parameters,data_image, learning_rate):
   seed = 25
   random.seed(seed)
   np.random.seed(seed)
@@ -44,6 +44,7 @@ def cph (data_x, cph_parameters,data_image):
   # System parameters
   batch_size = cph_parameters['batch_size']
   hint_rate = cph_parameters['hint_rate']
+  # print(hint_rate)
   alpha = cph_parameters['alpha']
   iterations = cph_parameters['iterations']
   
@@ -55,7 +56,7 @@ def cph (data_x, cph_parameters,data_image):
   #print(h_dim)
   
   # Normalization
-  norm_data, norm_parameters = normalization(data_x)
+  # norm_data, norm_parameters = normalization(data_x)
   #norm_data_x = np.nan_to_num(norm_data, 0)
   norm_data_x = np.nan_to_num(data_x, 0)
 
@@ -153,10 +154,12 @@ def cph (data_x, cph_parameters,data_image):
   D_loss = D_loss_temp
   G_loss = G_loss_temp + alpha * MSE_loss 
   
-  ## CPH solver
-  D_solver = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(D_loss, var_list=theta_D)
-  G_solver = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(G_loss, var_list=theta_G)
-  
+  ## CPH solver manual set l-r
+  D_solver = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(D_loss, var_list=theta_D)
+  G_solver = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(G_loss, var_list=theta_G)
+  # D_solver = tf.train.AdamOptimizer().minimize(D_loss, var_list=theta_D)
+  # G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
+
   ## Iterations
   sess = tf.Session()
   sess.run(tf.global_variables_initializer())
@@ -203,7 +206,7 @@ def cph (data_x, cph_parameters,data_image):
   # print(imputed_data)
 
   # Renormalization
-  #imputed_data = renormalization(imputed_data, norm_parameters)
+  # imputed_data = renormalization(imputed_data, norm_parameters)
   
   # Rounding
   imputed_data = rounding(imputed_data, data_x)  

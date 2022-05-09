@@ -9,10 +9,17 @@ import pandas as pd
 from utils import binary_sampler
 from keras.datasets import mnist
 
-def data_loader(miss_rate, yy):
+def data_loader(miss_rate, yy, disease):
   diease_list = ['Obesity Prevalence', 'Hypertension Prevalence', 'Diabetes Mellitus (Diabetes) Prevalence']
   year = yy
-  diease_select_list = 0 # target disease
+
+  if disease == "obesity":
+    diease_select_list = 0 # target disease
+  elif disease == "hypertension":
+    diease_select_list = 1 # target disease
+  else:
+    diease_select_list = 2 # target disease
+
   #year = 2017
   N1 = 483
   N3 = 2017 - year + 1

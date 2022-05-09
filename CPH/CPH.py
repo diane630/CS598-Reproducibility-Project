@@ -3,11 +3,7 @@ CPH function.
 '''
 
 # Necessary packages
-# import tensorflow as tf
-# use 1.X API
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
-
+import tensorflow as tf
 import sys
 import numpy as np
 from tqdm import tqdm
@@ -24,7 +20,6 @@ def cph (data_x, cph_parameters,data_image):
   random.seed(seed)
   np.random.seed(seed)
   tf.set_random_seed(seed)
-  # tf.random.set_seed(seed)
   '''Impute missing values in data_x
   
   Args:
@@ -99,7 +94,7 @@ def cph (data_x, cph_parameters,data_image):
   G_b3 = tf.Variable(tf.zeros(shape = [dim]))
   
   theta_G = [G_W1, G_W2, G_W3, G_b1, G_b2, G_b3, conv_filter_w1, conv_filter_b1, conv_filter_w2, conv_filter_b2]
-  # print("theta_G", theta_G)
+  
   ## CPH functions
   # CNN + Generator
   def generator(x,m):
@@ -154,8 +149,8 @@ def cph (data_x, cph_parameters,data_image):
   G_loss = G_loss_temp + alpha * MSE_loss 
   
   ## CPH solver
-  D_solver = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(D_loss, var_list=theta_D)
-  G_solver = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(G_loss, var_list=theta_G)
+  D_solver = tf.train.AdamOptimizer().minimize(D_loss, var_list=theta_D)
+  G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
   
   ## Iterations
   sess = tf.Session()
@@ -194,20 +189,14 @@ def cph (data_x, cph_parameters,data_image):
   image_mb = data_image
   image_mb[0, :, :, 0] = X_mb
 
-  # print("\nbefore sess.run\n", G_sample, M_mb, X_mb, image_mb)
-
   imputed_data = sess.run([G_sample], feed_dict = {X_pre: image_mb, M: M_mb})[0]
-  # print(imputed_data)
-
+  
   imputed_data = data_m * norm_data_x + (1-data_m) * imputed_data
-  # print(imputed_data)
-
+  
   # Renormalization
   #imputed_data = renormalization(imputed_data, norm_parameters)
   
   # Rounding
   imputed_data = rounding(imputed_data, data_x)  
-  # print(imputed_data)
-
           
   return imputed_data

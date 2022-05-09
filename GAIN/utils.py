@@ -13,6 +13,8 @@
 # Necessary packages
 import numpy as np
 import tensorflow as tf
+# use 1.X API
+import tensorflow.compat.v1 as tf
 
 
 def normalization (data, parameters=None):

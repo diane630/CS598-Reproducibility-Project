@@ -6,16 +6,24 @@ Data loader for Chronic Diseases Prevalence Dataset
 import os
 import numpy as np
 import pandas as pd
-from utils import binary_sampler
-from keras.datasets import mnist
 import sys
 
-def data_loader(miss_rate, yy):
+def data_loader(miss_rate, yy, disease):
   diease_list = ['Obesity Prevalence', 'Hypertension Prevalence', 'Diabetes Mellitus (Diabetes) Prevalence']
   year = yy
-  diease_select_list = 0 # target disease
-  diease_select_list2 = 1
-  diease_select_list3 = 2
+
+  if disease == "obesity":
+    diease_select_list = 0 # target disease
+    diease_select_list2 = 1
+    diease_select_list3 = 2
+  elif disease == "hypertension":
+    diease_select_list = 1 # target disease
+    diease_select_list2 = 0
+    diease_select_list3 = 2
+  else:
+    diease_select_list = 2 # target disease
+    diease_select_list2 = 0
+    diease_select_list3 = 1
 
   #year = 2017
   N1 = 483

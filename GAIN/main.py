@@ -37,7 +37,7 @@ def test_loss(ori_data_x,imputed_data_x,ward_nor_list):
     MAE=y_mae/n
     return RMSE, MAE
 
-def main (args,yy):
+def main (args,yy, disease = "obesity"):
   '''Main function
   
   Args:
@@ -60,7 +60,7 @@ def main (args,yy):
                      'iterations': args.iterations}
 
   # Load data and introduce missingness
-  ori_data_x, miss_data_x, data_m, ward_nor_list = data_loader(miss_rate, yy)
+  ori_data_x, miss_data_x, data_m, ward_nor_list = data_loader(miss_rate, yy, disease = disease)
   
   # Impute missing data
   imputed_data_x = gain(miss_data_x, gain_parameters)
@@ -70,11 +70,12 @@ def main (args,yy):
   return RMSE, MAE
 
 if __name__ == '__main__':
-    missing_rate = 90  # missing rate
+    missing_rate = 50  # missing rate
+    disease = "diabetes"
 
     for yy in range(2008,2009):
         mmin = 100
-        print("obesity, year:" + str(yy) + "-2017")
+        print(disease, ", year:" + str(yy) + "-2017")
         for i in range(10):
             # Inputs for the main function
             parser = argparse.ArgumentParser()
@@ -108,11 +109,11 @@ if __name__ == '__main__':
             print(args)
             #sys.exit(1)
             # Calls main function
-            RMSE, MAE = main(args,yy)
+            RMSE, MAE = main(args,yy,disease=disease)
             if RMSE+MAE < mmin:
                 RMSE2= RMSE
                 MAE2 = MAE
                 mmin = RMSE+MAE
-        print("target disease: obesity")
+        print("target disease: ", disease)
         print("RMSE:", RMSE2)
         print("MAE:", MAE2)
